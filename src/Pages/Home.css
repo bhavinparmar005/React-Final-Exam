@@ -1,0 +1,46 @@
+.blog-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 3rem 0 2rem;
+    color: #333;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 160px;
+    object-fit: cover;
+    background-color: #ddd;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 1.1rem ;
+}
+
+.card-text {
+    font-size: 0.95rem;
+    color: #555;
+}
+.my-masonry-grid {
+    display: -webkit-box; 
+    display: -ms-flexbox; 
+    display: flex;
+    margin-left: -30px; /* gutter size offset */
+    width: auto;
+  }
+  .my-masonry-grid_column {
+    padding-left: 30px; /* gutter size */
+    background-clip: padding-box;
+  }
+

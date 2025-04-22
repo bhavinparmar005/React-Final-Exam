@@ -1,0 +1,19 @@
+.blog-card {
+    transition: all 0.3s ease !important;
+    height: 100% !important;
+}
+
+.blog-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.blog-img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 180px !important;
+}
+
+.card-body p {
+    font-size: 0.9rem !important;
+    color: #555 !important;
+}
