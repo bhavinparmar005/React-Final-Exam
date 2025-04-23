@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBlog, getBlog } from '../Feature/BlogSlice';
 import "./Adminpage.css"
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
     let nav = useNavigate()
@@ -14,25 +14,27 @@ const AdminPage = () => {
     }, [dispatch])
 
     const deletedata = (id) => {
-
         dispatch(deleteBlog(id))
-        alert(id)
-    getBlog()
+
     }
+
+
+    console.log(blog);
+
 
 
     return (
         <>
-            <h1 className='text-center mt-2'>admin Page</h1>
+            <h1 className='text-center mt-2'> Wel-Come to Admin Page</h1>
             <button onClick={() => { nav('/add') }}> add blog</button>
             <div className="container py-5">
                 <div className="row justify-content-center">
                     {
-                        Array.isArray(blog) && blog?.map((val) => {
+                      blog?.map((val, index) => {
                             return (
-                                <div className="col-md-6 col-lg-4 mb-4" key={val.id}>
+                                <div className="col-md-6 col-lg-4 mb-4" key={index}>
                                     <div className="card blog-card h-100">
-                                        <img src={val?.img} className="card-img-top blog-img" />
+                                        <img src={val?.imgUrl} className="card-img-top blog-img" />
                                         <div className="card-body d-flex flex-column justify-content-between">
                                             <div>
                                                 <h5 className="card-title fw-bold"> {val?.title} </h5>

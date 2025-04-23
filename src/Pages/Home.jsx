@@ -11,8 +11,9 @@ const Home = () => {
   useEffect(() => {
     dispatch(getBlog())
   }, [dispatch])
-
+  
   const { blog } = useSelector((state) => state.blog || []);
+  dispatch(getBlog())
 
 
 
@@ -36,9 +37,9 @@ const Home = () => {
         >
           {blog?.map((card, index) => (
             <div className="card"  key={index}>
-              <img src={card.img} className="card-img-top" />
+              <img src={card?.imgUrl} className="card-img-top" />
               <div className="card-body">
-                <h5 className="card-title">{card.title}</h5>
+                <h5 className="card-title">{card.title}</h5> 
                 <p className="card-text">{card.description}</p>
               </div>
             </div>
