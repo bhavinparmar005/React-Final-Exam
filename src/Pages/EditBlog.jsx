@@ -115,7 +115,7 @@ import { editBlog } from '../Feature/BlogSlice';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
-const EditBlog = () => {
+const Editblog = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -250,5 +250,5 @@ const EditBlog = () => {
   );
 };
 
-export default EditBlog;
+export default Editblog;
 
