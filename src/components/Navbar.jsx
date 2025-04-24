@@ -28,7 +28,7 @@ const Navbar = () => {
                                 <li className="nav-item"><a className="nav-link" href="#">BEST OF</a></li>
                                 <li className="nav-item"><a className="nav-link" href="#">THE BLOG</a></li>
                             </ul>
-                            <a className="btn btn-highlight mt-3 mt-lg-0 hello" onClick={()=> nav('/adminpage')}><i className="bi bi-star-fill" /> STARTING A NEW BLOG?</a>
+                            <a className="btn btn-highlight mt-3 mt-lg-0 hello" onClick={()=> nav('/login')}><i className="bi bi-star-fill" /> STARTING A NEW BLOG?</a>
                         </div>
                     </div>
                 </div>
