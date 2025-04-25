@@ -13,10 +13,6 @@ const Home = () => {
   }, [dispatch])
   
   const { blog } = useSelector((state) => state.blog || []);
-  dispatch(getBlog())
-
-
-
   // Set breakpoints
   const breakpointColumnsObj = {
     default: 3,

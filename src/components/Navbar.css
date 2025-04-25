@@ -1,68 +1,91 @@
 .navbar-brand {
-    color: #fff !important;
-    font-weight: bold !important;
+  color: #fff !important;
+  font-weight: bold !important;
 }
-.hello:hover{
-    background-color: transparent !important;
+
+.hello:hover {
+  background-color: transparent !important;
 }
 
 .navbar-nav .nav-link {
-    color: #fff !important;
-    font-weight: bold;
+  color: #fff !important;
+  font-weight: bold;
+  position: relative;
+  text-decoration: none;
 }
 
 .btn-highlight {
-    background-color: #f8d477 !important;
-    color: #000 ;
-    font-weight: bold !important;
-    border-radius: 6px;
-    padding: 5px 15px;
+  background-color: #f8d477 !important;
+  color: #000;
+  font-weight: bold !important;
+  border-radius: 6px;
+  padding: 5px 15px;
+  border: none;
 }
 
 .btn-highlight .bi {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .offcanvas {
-    background-color: #000 !important;
-    color: #fff !important;
+  background-color: #000 !important;
+  color: #fff !important;
 }
 
 .offcanvas .nav-link {
-    color: #fff !important;
-    font-weight: bold !important;
+  color: #fff !important;
+  font-weight: bold !important;
+}
+
+.ul > li > .nav-link::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: white;
+
+  margin: auto;
+  transition: all ease-in-out 0.5s;
+}
+.ul > li > .nav-link:hover::after {
+  width: 100%;
 }
 
 .navbar-toggler {
-    border: none;
+  border: none;
 }
-
 .navbar-toggler:focus {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 @media (min-width: 992px) {
-    .offcanvas {
-        position: static;
-        transform: none;
-        visibility: visible !important;
-        background-color: transparent;
-        border: none;
-        display: flex !important;
-        flex-direction: row;
-        align-items: center;
-        width: auto !important;
-        height: auto !important;
-    }
+  .offcanvas {
+    position: static;
+    transform: none;
+    visibility: visible !important;
+    background-color: transparent;
+    border: none;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    width: auto !important;
+    height: auto !important;
+  }
 
-    .offcanvas-header {
-        display: none;
-    }
+  .offcanvas-header {
+    display: none;
+  }
 
-    .offcanvas-body {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0;
-    }
+  .offcanvas-body {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .ul > li > .nav-link::after {
+    display: none;
+  }
 }

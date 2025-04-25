@@ -1,0 +1,10 @@
+.show{
+   position: absolute;
+   top:55%;
+   right:3%;
+   
+}
+.text-danger{
+    font-size: 14px !important;
+    color: red !important;
+}

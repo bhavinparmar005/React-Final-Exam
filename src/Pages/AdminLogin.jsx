@@ -1,110 +1,156 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { db } from '../Feature/FirebaseConfig'
+import { useNavigate } from 'react-router-dom'
 
-const App = () => {
-    const {
-        handleChange,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-        resetForm
-    } = useFormik({
-        initialValues: {
+const AdminLogin = () => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [signupData, setSignupData] = useState([])
+  let nav = useNavigate()
 
-            email: '',
-            password: ''
+  const getsignupData = async () => {
+    let result = await getDocs(collection(db, "adminSignup"));
+    let res = result.docs.map((val) => {
 
-        },
-        validationSchema: yup.object({
+      return ({ id: val.id, ...val.data() })
+    });
 
-            email: yup
-                .string()
-                .required('Email is required')
-                .email('Invalid email format')
-                .test(
-                    'valid-structure',
-                    'Email must include a name before domain',
-                    (value) => value && !/^@.+$/.test(value.trim())
-                ),
-            password: yup
-                .string()
-                .required('Password is required!')
-                .matches(
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
-                    'Password must include upper, lower, number & symbol (8+ chars)'
-                )
-        }),
-        onSubmit: (data) => {
-            console.log(data)
-            resetForm()
-        }
-    })
+    setSignupData(res)
+    console.log(signupData);
 
-    return (
-        <div className="container py-5">
-            <div className="row justify-content-center ">
-                <div className="col-md-6  border rounded ">
-                    <h1 className="mb-3 text-center mt-2">Admin Login</h1>
+  }
 
-                    <form onSubmit={handleSubmit} noValidate>
+  console.log(signupData);
 
+  useEffect(() => {
+    getsignupData()
+  }, [])
+  const {
+    handleChange,
+    handleSubmit,
+    values,
+    errors,
+    touched,
+    resetForm
+  } = useFormik({
+    initialValues: { email: '', password: '' },
+    validationSchema: yup.object({
+      email: yup
+        .string()
+        .required('Email is required')
+        .email('Invalid email format')
+        .test(
+          'valid-structure',
+          'Email must include a name before domain',
+          (value) => value && !/^@.+$/.test(value.trim()) &&
+            value.includes('@') && value.endsWith("gmail.com")
+        ),
+      password: yup
+        .string()
+        .required('Password is required!')
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+          'Password must include upper, lower, number & symbol (8+ chars)'
+        )
+    }),
+    onSubmit: async (data) => {
 
-                        {/* Email */}
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label">
-                                Email address
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                className={`form-control ${touched.email && errors.email ? 'is-invalid' : ''}`}
-                                placeholder="Enter email"
-                                value={values.email}
-                                onChange={handleChange}
-                            />
-                            {touched.email && errors.email && (
-                                <div className="invalid-feedback">{errors.email}</div>
-                            )}
-                        </div>
+      const findsignupUser = signupData.find((val) => {
+        return val.email === data.email && val.password === data.password
+      })
+      console.log(data);
 
+      if (findsignupUser) {
 
+        await addDoc(collection(db, "adminLogin"), data)
+        alert('Admin Login Successfully')
 
-                        {/* Password */}
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                className={`form-control ${touched.password && errors.password ? 'is-invalid' : ''}`}
-                                placeholder="Enter password"
-                                autoComplete="on"
-                                value={values.password}
-                                onChange={handleChange}
-                            />
-                            {touched.password && errors.password && (
-                                <div className="invalid-feedback">{errors.password}</div>
-                            )}
-                        </div>
+        nav('/adminpage')
 
+      } else {
+        alert('Invalid email or password')
+      }
 
+      resetForm()
+    }
+  })
 
-                        {/* Submit */}
-                        <div className="d-grid">
-                            <button type="submit" className="btn btn-primary btn-lg mb-3">
-                                Login
-                            </button>
-                        </div>
-                    </form>
-                </div>
+  const togglePassword = () => setShowPassword(!showPassword)
+
+  return (
+    <div className="container py-4  " >
+      <div className="row justify-content-center gx-0 d-flexa d-flex align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="col-12 col-sm-10 col-md-8 col-lg-6 border rounded p-3 p-sm-4">
+          <h1 className="text-center mb-3">Admin Login</h1>
+          <form onSubmit={handleSubmit} noValidate>
+            {/* Email */}
+            <div className="mb-1">
+              <label htmlFor="email" className="form-label">
+                Email address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                // className={`form-control ${touched.email && errors.email ? 'is-invalid' : ''}`}
+                className='form-control'
+                placeholder="Enter email"
+                value={values.email}
+                onChange={handleChange}
+              />
+
             </div>
+            {touched.email && errors.email && (
+              <div className="text-danger">{errors.email}</div>
+            )}
+
+            {/* Password */}
+            <div className="mb-1 position-relative">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                className='form-control'
+                // className={`form-control ${touched.password && errors.password ? 'is-invalid' : ''}`}
+                placeholder="Enter password"
+                autoComplete="on"
+                value={values.password}
+                onChange={handleChange}
+              />
+              <span
+                className="show"
+                onClick={togglePassword}
+
+              >
+                {showPassword ? (
+                  <i className="bi bi-eye-slash"></i>  // Use Bootstrap icon for hide
+                ) : (
+                  <i className="bi bi-eye"></i>  // Use Bootstrap icon for show
+                )}
+              </span>
+
+            </div>
+            {touched.password && errors.password && (
+              <div className="text-danger">{errors.password}</div>
+            )}
+
+
+            {/* Submit */}
+            <div className="d-grid mt-4">
+              <button type="submit" className="btn btn-primary btn-lg">
+                Login
+              </button>
+            </div>
+          </form>
         </div>
-    )
+      </div>
+    </div>
+  )
 }
 
-export default App
+export default AdminLogin

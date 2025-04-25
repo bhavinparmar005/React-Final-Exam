@@ -71,10 +71,7 @@ import { db } from "./FirebaseConfig";
 // ✅ Get all blogs
 export const getBlog = createAsyncThunk('blog/getBlog', async () => {
     const result = await getDocs(collection(db, "Add-Blog"));
-    return result.docs.map((val) => ({
-        ...val.data(),
-        id: val.id
-    }));
+    return result.docs.map((val) => ({...val.data(),id: val.id}));
 });
 
 // ✅ Add a new blog
