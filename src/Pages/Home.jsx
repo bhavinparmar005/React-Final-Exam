@@ -9,9 +9,16 @@ const Home = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    const enableScroll = () => {
+      document.body.style.overflow = "auto";
+    };
+    return () => enableScroll();  // Cleanup on unmount
+  }, []);
+
+  useEffect(() => {
     dispatch(getBlog())
   }, [dispatch])
-  
+
   const { blog } = useSelector((state) => state.blog || []);
   // Set breakpoints
   const breakpointColumnsObj = {
@@ -32,10 +39,10 @@ const Home = () => {
           columnClassName="my-masonry-grid_column"
         >
           {blog?.map((card, index) => (
-            <div className="card"  key={index}>
+            <div className="card" key={index}>
               <img src={card?.imgUrl} className="card-img-top" />
               <div className="card-body">
-                <h5 className="card-title">{card.title}</h5> 
+                <h5 className="card-title">{card.title}</h5>
                 <p className="card-text">{card.description}</p>
               </div>
             </div>

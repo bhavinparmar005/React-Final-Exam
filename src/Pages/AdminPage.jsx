@@ -24,16 +24,23 @@ const AdminPage = () => {
         getloginUserData()
     }, [])
 
+    useEffect(() => {
+        const enableScroll = () => {
+            document.body.style.overflow = "auto";
+        };
+        return () => enableScroll();  // Cleanup on unmount
+    }, []);
+
     const logOut = async () => {
 
         let id = loginData[0]?.id
 
         let result = await deleteDoc(doc(db, "adminLogin", id))
 
-        
 
-            nav('/login');
-      
+
+        nav('/login');
+
 
     }
 

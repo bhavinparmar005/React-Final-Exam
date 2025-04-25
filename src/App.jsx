@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './Pages/Home'
 import Addblog from './Pages/Addblog'
@@ -10,12 +10,7 @@ import AdminPage from './Pages/AdminPage'
 
 const App = () => {
 
-  useEffect(() => {
-    const enableScroll = () => {
-    document.body.style.overflow = "auto";
-    };
-    return () => enableScroll();  // Cleanup on unmount
-  }, []);
+
   return (
 
 
