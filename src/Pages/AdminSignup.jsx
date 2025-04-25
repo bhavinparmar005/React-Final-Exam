@@ -4,6 +4,7 @@ import * as yup from 'yup'
 import "./AdminSignup.css"
 import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../Feature/FirebaseConfig'
+import { Link } from 'react-router-dom'
 
 
 const AdminSignup = () => {
@@ -38,8 +39,8 @@ const AdminSignup = () => {
         .test(
           'valid-structure',
           'Email must include a name before domain',
-          (value) => value && !/^@.+$/.test(value.trim()) && 
-           value.includes('@') && value.endsWith("gmail.com")
+          (value) => value && !/^@.+$/.test(value.trim()) &&
+            value.includes('@') && value.endsWith("gmail.com")
         ),
       password: yup
         .string()
@@ -54,8 +55,8 @@ const AdminSignup = () => {
         .oneOf([yup.ref('password'), null], 'Passwords must match')
     }),
     onSubmit: async (data) => {
-      
-       await addDoc(collection(db ,"adminSignup"),data)
+
+      await addDoc(collection(db, "adminSignup"), data)
       alert('Admin Signup Successfully')
       resetForm()
     }
@@ -87,11 +88,11 @@ const AdminSignup = () => {
                 value={values.name}
                 onChange={handleChange}
               />
-             
+
             </div>
             {touched.name && errors.name && (
-                <div className="text-danger">{errors.name}</div>
-              )}
+              <div className="text-danger">{errors.name}</div>
+            )}
 
             {/* Email */}
             <div className="mb-1">
@@ -108,11 +109,11 @@ const AdminSignup = () => {
                 value={values.email}
                 onChange={handleChange}
               />
-             
+
             </div>
             {touched.email && errors.email && (
-                <div className="text-danger">{errors.email}</div>
-              )}
+              <div className="text-danger">{errors.email}</div>
+            )}
 
             {/* Password */}
             <div className="mb-1 position-relative">
@@ -133,7 +134,7 @@ const AdminSignup = () => {
               <span
                 className="show"
                 onClick={togglePassword}
-                
+
               >
                 {showPassword ? (
                   <i className="bi bi-eye-slash"></i>  // Use Bootstrap icon for hide
@@ -141,11 +142,11 @@ const AdminSignup = () => {
                   <i className="bi bi-eye"></i>  // Use Bootstrap icon for show
                 )}
               </span>
-              
+
             </div>
             {touched.password && errors.password && (
-                <div className="text-danger">{errors.password}</div>
-              )}
+              <div className="text-danger">{errors.password}</div>
+            )}
 
             {/* Confirm Password */}
             <div className="mb-1 position-relative">
@@ -166,7 +167,7 @@ const AdminSignup = () => {
               <span
                 className="show"
                 onClick={toggleConfirmPassword}
-                
+
               >
                 {showConfirmPassword ? (
                   <i className="bi bi-eye-slash "></i>  // Use Bootstrap icon for hide
@@ -174,19 +175,20 @@ const AdminSignup = () => {
                   <i className="bi bi-eye show"></i>  // Use Bootstrap icon for show
                 )}
               </span>
-             
+
             </div>
             {touched.conformPassword && errors.conformPassword && (
-                <div className='text-danger'>{errors.conformPassword}</div>
-              )}
+              <div className='text-danger'>{errors.conformPassword}</div>
+            )}
 
             {/* Submit */}
             <div className="d-grid mt-3">
-              <button type="submit" className="btn btn-primary btn-lg mb-3">
+              <button type="submit" className="btn btn-primary btn-lg mb-1">
                 Sign Up
               </button>
             </div>
           </form>
+          <p className="text-center ">Already have an account? <Link to={`/login`}>Login</Link></p>
         </div>
       </div>
     </div>

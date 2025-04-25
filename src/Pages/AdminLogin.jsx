@@ -3,7 +3,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../Feature/FirebaseConfig'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -147,6 +147,7 @@ const AdminLogin = () => {
               </button>
             </div>
           </form>
+          <p className="text-center mt-2">Don't have an account? <Link to={`/signup`}>Sign-Up</Link></p>
         </div>
       </div>
     </div>
