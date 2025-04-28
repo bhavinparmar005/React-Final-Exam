@@ -17,10 +17,10 @@ const Editblog = () => {
   const { login } = useSelector((state) => state.login || []);
 
   useEffect(() => {
-    if (!login[0]) {
+    if (login.length === 0) {
       navigate('/')
     }
-  }, [])
+  }, [login])
 
 
   useEffect(() => {
