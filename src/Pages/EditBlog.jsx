@@ -1,14 +1,31 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { editBlog } from '../Feature/BlogSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { getloginUSer } from '../Feature/LoginSlice';
 
 const Editblog = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
+  const { login } = useSelector((state) => state.login || []);
+
+  useEffect(() => {
+    if (!login[0]) {
+      navigate('/')
+    }
+  }, [])
+
+
+  useEffect(() => {
+    dispatch(getloginUSer())
+  }, [dispatch])
 
   const initialState = {
     img: null,
@@ -33,32 +50,51 @@ const Editblog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    try {
+      let imgUrl = preview;
 
-    let imgUrl = preview;
+      if (data.img && typeof data.img !== 'string') {
+        const formData = new FormData();
+        formData.append('file', data.img);
+        formData.append('upload_preset', 'blog-img');
+        formData.append('cloud_name', 'dwhnsp84k');
 
-    if (data.img && typeof data.img !== 'string') {
-      const formData = new FormData();
-      formData.append('file', data.img);
-      formData.append('upload_preset', 'blog-img');
-      formData.append('cloud_name', 'dwhnsp84k');
+        const result = await axios.post(
+          'https://api.cloudinary.com/v1_1/dwhnsp84k/image/upload',
+          formData
+        );
 
-      const result = await axios.post(
-        'https://api.cloudinary.com/v1_1/dwhnsp84k/image/upload',
-        formData
-      );
+        imgUrl = result.data.url;
+      }
 
-      imgUrl = result.data.url;
+      const { title, description } = data;
+      const finalData = { title, description, imgUrl };
+
+      dispatch(editBlog({ finaldata: finalData, id: location.state?.id }));
+
+
+      Swal.fire({
+        title: "Blog Edit Successfully !",
+        icon: "success",
+        draggable: true,
+        showConfirmButton: false,
+        timer: 2000
+      });
+      setTimeout(() => {
+        navigate('/adminpage');
+      }, 1900);
+
+      setData(initialState);
+      setPreview('');
+
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
     }
 
-    const { title, description } = data;
-    const finalData = { title, description, imgUrl };
 
-    dispatch(editBlog({ finaldata: finalData, id: location.state?.id }));
-
-    navigate('/adminpage');
-
-    setData(initialState);
-    setPreview('');
   };
 
   return (
@@ -70,7 +106,7 @@ const Editblog = () => {
               <h1 className="card-title mb-4 text-center fs-2">Edit Blog</h1>
               <form onSubmit={handleSubmit}>
                 {preview && (
-                  <div className="mb-3 text-center">
+                  <div className="mb-3 text-center img_align">
                     <img
                       src={preview}
                       alt="Preview"

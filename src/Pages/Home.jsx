@@ -4,9 +4,28 @@ import { getBlog } from '../Feature/BlogSlice';
 import Navbar from '../components/Navbar';
 import Masonry from 'react-masonry-css'; // 🔥 Import Masonry
 import "./Home.css"
+import { useNavigate } from 'react-router-dom';
+import { getloginUSer } from '../Feature/LoginSlice';
 
 const Home = () => {
   const dispatch = useDispatch()
+
+  const nav = useNavigate()
+  const { login } = useSelector((state) => state.login || []);
+
+
+
+  useEffect(() => {
+    if (login.length == 1) {
+
+      nav('/adminpage')
+    }
+  },[login])
+
+
+  useEffect(() => {
+    dispatch(getloginUSer())
+  }, [dispatch])
 
   useEffect(() => {
     const enableScroll = () => {

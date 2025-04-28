@@ -1,32 +1,41 @@
 import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
-import { db } from '../Feature/FirebaseConfig'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { getsignupUSer } from '../Feature/SignupSlice'
+import Swal from 'sweetalert2'
+import { addloginUser, getloginUSer } from '../Feature/LoginSlice'
 
 const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false)
-  const [signupData, setSignupData] = useState([])
+  const { signup } = useSelector((state) => state.signup)
   let nav = useNavigate()
+  let dispatch = useDispatch()
+  const { login } = useSelector((state) => state.login || []);
 
-  const getsignupData = async () => {
-    let result = await getDocs(collection(db, "adminSignup"));
-    let res = result.docs.map((val) => {
 
-      return ({ id: val.id, ...val.data() })
-    });
-
-    setSignupData(res)
-    console.log(signupData);
-
-  }
-
-  console.log(signupData);
 
   useEffect(() => {
-    getsignupData()
-  }, [])
+    if (login.length == 1) {
+
+      nav('/adminpage')
+    }
+  },[login])
+
+
+  useEffect(() => {
+    dispatch(getloginUSer())
+  }, [dispatch])
+
+
+
+  useEffect(() => {
+    dispatch(getsignupUSer())
+  }, [dispatch])
+
+  // console.log(signup);
+
   const {
     handleChange,
     handleSubmit,
@@ -57,21 +66,50 @@ const AdminLogin = () => {
     }),
     onSubmit: async (data) => {
 
-      const findsignupUser = signupData.find((val) => {
+      const findsignupUser = signup.find((val) => {
         return val.email === data.email && val.password === data.password
       })
-      console.log(data);
+
+
 
       if (findsignupUser) {
 
-        await addDoc(collection(db, "adminLogin"), data)
-        alert('Admin Login Successfully')
+        dispatch(addloginUser(data))
 
-        nav('/adminpage')
+
+        Swal.fire({
+          title: " Login Successfully !",
+          icon: "success",
+          draggable: true,
+          showConfirmButton: false,
+          timer: 1900
+        });
+
+
+
+        setTimeout(() => {
+          nav('/adminpage')
+        }, 2000);
 
       } else {
-        alert('Invalid email or password')
+
+        Swal.fire({
+          title: " Invalid email or password ! && first Register Then Login",
+          icon: "error",
+          draggable: true,
+          showConfirmButton: false,
+          timer: 2000
+        });
+
+        setTimeout(() => {
+          nav('/signup')
+
+        }, 1900);
+
       }
+
+
+
 
       resetForm()
     }

@@ -1,15 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import "./AdminSignup.css"
-import { addDoc, collection } from 'firebase/firestore'
-import { db } from '../Feature/FirebaseConfig'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import Swal from 'sweetalert2'
+import { addsignupUser } from '../Feature/SignupSlice'
+import { getloginUSer } from '../Feature/LoginSlice'
 
 
 const AdminSignup = () => {
+
+  let nav = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  let dispatch = useDispatch()
+  const { login } = useSelector((state) => state.login || []);
+
+
+
+  useEffect(() => {
+    if (login.length == 1) {
+      nav('/adminpage')
+    }
+  }, [login])
+
+
+  useEffect(() => {
+    dispatch(getloginUSer())
+  }, [dispatch])
 
   const {
     handleChange,
@@ -56,8 +75,20 @@ const AdminSignup = () => {
     }),
     onSubmit: async (data) => {
 
-      await addDoc(collection(db, "adminSignup"), data)
-      alert('Admin Signup Successfully')
+
+
+      dispatch(addsignupUser(data))
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Signup Successfull',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      setTimeout(() => {
+        nav('/login')
+      }, 2000);
+
       resetForm()
     }
   })

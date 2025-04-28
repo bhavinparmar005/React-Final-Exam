@@ -1,14 +1,29 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { addBlog } from '../Feature/BlogSlice'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import "./Addblog.css"
+import { getloginUSer } from '../Feature/LoginSlice'
 
 const Addblog = () => {
 
   let dispatch = useDispatch()
   let nav = useNavigate()
   const [preview, setPreview] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const { login } = useSelector((state) => state.login || []);
+
+  useEffect(() => {
+    if (!login[0]) {
+      nav('/')
+    }
+  }, [])
+
+
+  useEffect(() => {
+    dispatch(getloginUSer())
+  }, [dispatch])
 
   const [data, setData] = useState({
     img: "",
@@ -33,41 +48,47 @@ const Addblog = () => {
   }
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // 🛑 Start loading
 
-    e.preventDefault()
-    const url = "https://api.cloudinary.com/v1_1/dwhnsp84k/image/upload"
+    try {
+      const url = "https://api.cloudinary.com/v1_1/dwhnsp84k/image/upload";
+      const formData = new FormData();
+      formData.append("file", data.img);
+      formData.append("upload_preset", "blog-img");
+      formData.append("cloud_name", "dwhnsp84k");
 
-    const formData = new FormData();
-    formData.append("file", data.img);
-    formData.append("upload_preset", "blog-img");
-    formData.append("cloud_name", "dwhnsp84k");
-    const result = await axios.post(url, formData)
+      const result = await axios.post(url, formData);
 
-    const { title, description } = data
+      const { title, description } = data;
+      const imgUrl = result.data.url;
+      const finaldata = { title, description, imgUrl };
 
-    const imgUrl = result.data.url
+      if (finaldata) {
+        await dispatch(addBlog(finaldata));
 
-    const finaldata = { title, description, imgUrl }
-  if(finaldata){dispatch(addBlog(finaldata))}
-    
+      }
 
-    // setData({...data,img:imgUrl})
-
-
-
-
-    nav('/adminpage')
+      setTimeout(() => {
+        nav('/adminpage');
+      }, 2000);
 
 
-    setData({
-      img: "",
-      title: "",
-      description: ""
-    })
 
-    setPreview("")
+      setData({ img: "", title: "", description: "" });
+      setPreview("");
+      nav('/adminpage');
+    } catch (error) {
+      console.error("Error uploading blog:", error);
+    } finally {
+      setLoading(false);
 
+    }
   }
+
+
+
+
 
 
   return (
@@ -82,7 +103,7 @@ const Addblog = () => {
                 <form onSubmit={handleSubmit}>
                   {/* Image Preview */}
                   {preview && (
-                    <div className="mb-3 text-center">
+                    <div className="mb-3 text-center img_align">
                       <img src={preview} alt="Preview" className="img-fluid rounded mb-2" style={{ maxHeight: "200px" }} />
                     </div>
                   )}
@@ -103,7 +124,17 @@ const Addblog = () => {
                   </div>
                   {/* Submit Button */}
                   <div className="d-grid">
-                    <button type="submit" className="btn btn-primary fs-5">Post Blog</button>
+                    <button type="submit" className="btn btn-primary fs-5" disabled={loading}>
+                      {
+                        loading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Posting...
+                          </>
+                        ) : ("Post Blog")
+
+                      }
+                    </button>
                   </div>
                 </form>
               </div>

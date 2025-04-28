@@ -6,6 +6,7 @@ import Editblog from './Pages/EditBlog'
 import AdminLogin from './Pages/AdminLogin'
 import AdminSignup from './Pages/AdminSignup'
 import AdminPage from './Pages/AdminPage'
+import PageNotFound from './Pages/PageNotFound'
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='*' element={<div> 404 not page found</div>} />
+          <Route path='*' element={<PageNotFound/>} />
           <Route path='/' element={<Home />} />
           <Route path='/add' element={<Addblog />} />
           <Route path='/edit' element={<Editblog />} />
